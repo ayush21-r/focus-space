@@ -31,6 +31,7 @@ const sheet = document.getElementById('settings-sheet');
 const presetBtns = document.querySelectorAll('.preset-btn');
 const btnCustom = document.getElementById('btn-custom');
 const inpDailyGoal = document.getElementById('inp-daily-goal');
+const inpDailyIntention = document.getElementById('daily-intention');
 
 const btnFocusPause = document.getElementById('btn-focus-pause');
 const btnFocusEnd = document.getElementById('btn-focus-end');
@@ -149,6 +150,12 @@ document.addEventListener('click', unlockAudio, { once: true });
 
 function init() {
     initTheme();
+    if (inpDailyIntention) {
+        inpDailyIntention.value = localStorage.getItem('terraIntention') || '';
+        inpDailyIntention.addEventListener('change', (e) => {
+            localStorage.setItem('terraIntention', e.target.value);
+        });
+    }
     inpDailyGoal.value = dailyGoalMins;
     updateDisplay(initialDuration);
     updateDashboard();
@@ -233,6 +240,14 @@ function renderSmartStart() {
     const history = getHistory();
     smartStartChips.innerHTML = '';
     
+    const taskFreq = {};
+    history.forEach(s => {
+        if (s.task && s.task !== 'Quick Focus' && s.task !== 'Deep Work') {
+            taskFreq[s.task] = (taskFreq[s.task] || 0) + 1;
+        }
+    });
+    const topTasks = Object.entries(taskFreq).sort((a,b) => b[1] - a[1]).slice(0, 2);
+    
     // Quick
     let c1 = document.createElement('div');
     c1.className = 'chip'; c1.textContent = 'Quick 25m';
@@ -245,16 +260,18 @@ function renderSmartStart() {
     c2.onclick = () => { taskInput.value = 'Deep Work'; currentTag = {name: 'Deep Work', color: 'var(--primary)'}; currentTagDot.style.background = currentTag.color; setTimer(3000); startTimer(); };
     smartStartChips.appendChild(c2);
 
-    // Last
-    if(history.length > 0) {
-        const last = history[history.length - 1];
-        if(last.task && last.task !== 'Deep Work' && last.task !== 'Quick Focus') {
-            let c3 = document.createElement('div');
-            c3.className = 'chip'; c3.textContent = `Continue: ${last.task}`;
-            c3.onclick = () => { taskInput.value = last.task; if(last.tag) { currentTag.name = last.tag; currentTag.color = last.tagColor; currentTagDot.style.background = currentTag.color; } setTimer(last.durationMins * 60 || 1500); startTimer(); };
-            smartStartChips.appendChild(c3);
-        }
-    }
+    // Dynamic Top Tasks
+    topTasks.forEach(([taskName, count]) => {
+        let c = document.createElement('div');
+        c.className = 'chip'; c.textContent = taskName;
+        c.onclick = () => { 
+            taskInput.value = taskName; 
+            const lastSession = history.slice().reverse().find(s => s.task === taskName);
+            if(lastSession && lastSession.tag) { currentTag.name = lastSession.tag; currentTag.color = lastSession.tagColor; currentTagDot.style.background = currentTag.color; } 
+            setTimer(3000); startTimer(); 
+        };
+        smartStartChips.appendChild(c);
+    });
 }
 
 // -- Theme Engine --
@@ -569,9 +586,13 @@ function updateDashboard() {
     const yesterdayStr = new Date(today.getTime() - 86400000).toISOString().split('T')[0];
     const yesterdayMins = daysMap[yesterdayStr] || 0;
     let insight = "Keep going, you're building consistency 🚀";
-    if (todayMins > yesterdayMins && yesterdayMins > 0) insight = "You improved this week 📈";
+    if (todayMins > yesterdayMins && yesterdayMins > 0) insight = "You focused more than yesterday 📈";
     else if (streak > 3) insight = `Incredible ${streak}-day streak! 🔥`;
     else if (currentWeekMins > WEEKLY_GOAL_MINS) insight = "You crushed your weekly goal! 🎉";
+    
+    if (streak >= 2 && !insight.includes("streak")) {
+        insight += " • Don't break your streak 🔥";
+    }
     document.getElementById('insight-message').textContent = insight;
 
     // Chart

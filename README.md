@@ -7,7 +7,7 @@
 
 ## 🌌 Overview
 
-**FocusSpace** is an ultra-minimal, emotionally engaging productivity timer designed for deep work. Built with an Apple-tier design philosophy, it strips away the clutter of traditional productivity apps and leaves only what matters: a beautiful, stable, and immersive environment to help you get things done.
+**FocusSpace** is an ultra-minimal, engaging productivity timer designed for deep work. Built with a focus on simplicity and craftsmanship, it strips away the clutter of traditional productivity apps and leaves only what matters: a beautiful, stable, and immersive environment to help you get things done.
 
 Whether you're studying for finals, writing code, or simply needing an uninterrupted hour, FocusSpace acts as your quiet companion.
 
@@ -16,9 +16,9 @@ Whether you're studying for finals, writing code, or simply needing an uninterru
 - **Precision Focus Timer**: A meticulously crafted timer featuring fluid, stable, and subtle digit animations that never distract you.
 - **Deep Focus Mode**: When active, a cinematic vignette pulls your eyes to the center, gently blurring out secondary UI elements to keep you locked in.
 - **Native Soundscapes**: A 100% reliable, zero-latency Web Audio API synthesizer generates endless, perfectly looping Soft Rain, Quiet Cafe, and Deep Wind ambient noise. No broken links or loading times.
-- **Smart Insights**: Track your daily progress with an automated streak system and a beautifully minimal weekly bar chart.
+- **Smart Insights & Intentions**: Set a daily intention and track your progress with an automated streak system and a beautifully minimal weekly bar chart.
 - **Auto Break System**: Calm, delayed completion celebrations that effortlessly transition you into scheduled rest.
-- **Mobile First**: A flawless experience across all devices, featuring safe-area padding for modern phones, responsive typography, and tactile touch interactions without sticky hover states.
+- **Mobile First**: A flawless experience across all devices, featuring safe-area padding for modern phones, responsive typography, and tactile touch interactions.
 
 ## 📐 Design Philosophy
 
